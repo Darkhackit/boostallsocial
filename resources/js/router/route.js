@@ -48,6 +48,12 @@ const route = [
                 name:'register',
                 component:() => import("../views/auth/client/register.vue")
 
+            },
+            {
+                path:'confirm_code/:email',
+                name:'confirm_code',
+                component:() => import("../views/auth/client/confirm_token.vue")
+
             }
         ]
     }

@@ -1,23 +1,17 @@
 <script setup>
 import Textinput from "@/components/Textinput";
-import { useField, useForm } from "vee-validate";
-import * as yup from "yup";
 
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import { useToast } from "vue-toastification";
 // Image Import
-import loginBg from "@/assets/images/all-img/page-bg.png"
-import logoWhite from "@/assets/images/logo/logo-white.svg"
 import logo from "@/assets/images/logo/logo.svg"
 import {ref} from "vue";
 
-
 const router = useRouter()
-
+const route = useRoute()
 const form = ref({
-    email:'',
-    password:'',
-    password_confirmation:''
+    email:route.params.email,
+    code:'',
 })
 const errors = ref([])
 const processing = ref(false)
@@ -28,9 +22,10 @@ const clearErrors = (val) => {
 const onSubmit = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/auth/register',form.value)
+        let response = await axios.post('/api/auth/code_confirm',form.value)
         router.push({name:'confirm_code',params:{email:response.data.email}})
         processing.value = false
+        console.log(response)
     }catch (e) {
         if(e.response.status === 422) {
             errors.value = e.response.data.errors
@@ -49,15 +44,15 @@ const onSubmit = async () => {
                     /></router-link>
                 </div>
                 <div class="mb-5 text-center 2xl:mb-10">
-                    <h4 class="font-medium">Sign Up</h4>
-                    <div class="text-base text-slate-500 dark:text-slate-400">
-                        Sign in to your account to start using Boostallsocial
-                    </div>
+                    <h4 class="font-medium">Code Confirmation</h4>
+
                 </div>
                 <form @submit.prevent="onSubmit" class="space-y-4">
                     <Textinput
                         label="Email"
                         type="email"
+                        readonly
+                        disabled
                         placeholder="Type your email"
                         name="emil"
                         @input="clearErrors('email')"
@@ -66,30 +61,17 @@ const onSubmit = async () => {
                         classInput="h-[48px]"
                     />
                     <Textinput
-                        label="Password"
-                        type="password"
-                        placeholder="8+ characters, 1 capitat letter "
-                        name="password"
-                        @input="clearErrors('password')"
-                        v-model="form.password"
-                        :error="errors.password ? errors.password[0] : ''"
-                        hasicon
+                        label="Code"
+                        type="number"
+                        placeholder="Enter code "
+                        @input="clearErrors('code')"
+                        v-model="form.code"
+                        :error="errors.code ? errors.code[0] : ''"
                         classInput="h-[48px]"
                     />
-                    <Textinput
-                    label="Password Confirmation"
-                    type="password"
-                    placeholder="8+ characters, 1 capitat letter "
-                    name="password"
-                    @input="clearErrors('password_confirmation')"
-                    v-model="form.password_confirmation"
-                    :error="errors.password_confirmation ? errors.password_confirmation[0] : ''"
-                    hasicon
-                    classInput="h-[48px]"
-                />
 
                     <button type="submit" :disabled="processing" class="block w-full text-center btn btn-dark">
-                        Sign Up
+                        Verify
                     </button>
                 </form>
                 <div
@@ -108,7 +90,7 @@ const onSubmit = async () => {
                         :to="{name:'login'}"
                         class="font-medium text-slate-900 dark:text-white hover:underline"
                     >
-                        Sign In</router-link
+                        Sign Up</router-link
                     >
                 </div>
             </div>

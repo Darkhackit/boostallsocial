@@ -37,7 +37,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const store = useAuthStore()
     const token = computed(() => store.token)
-    if(!token.value && to.name !== 'login' && to.name !== 'register') {
+    if(!token.value && to.name !== 'login' && to.name !== 'register' && to.name !== 'confirm_code') {
          next({name:'login'})
         return
     }

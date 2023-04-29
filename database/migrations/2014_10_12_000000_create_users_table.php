@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('code')->nullable();
+            $table->timestamp('code_expiry')->nullable();
             $table->float('balance')->default(0);
             $table->string('api_key');
             $table->rememberToken();

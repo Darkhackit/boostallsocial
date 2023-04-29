@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'api' , 'prefix' => 'auth'] , function ($route) {
     Route::post('/login',\App\Http\Controllers\Client\LoginController::class);
+    Route::post('/register',\App\Http\Controllers\Client\RegisterController::class);
+    Route::post('/code_confirm',\App\Http\Controllers\Client\ConfirmCodeController::class);
 });
 
 Route::post('/add-provider',[\App\Http\Controllers\ProviderController::class,'create']);
