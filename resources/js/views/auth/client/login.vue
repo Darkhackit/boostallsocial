@@ -1,13 +1,10 @@
 <script setup>
 import Textinput from "@/components/Textinput";
-import { useField, useForm } from "vee-validate";
-import * as yup from "yup";
+import { useAuthStore } from "@/store/auth";
 
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 // Image Import
-import loginBg from "@/assets/images/all-img/page-bg.png"
-import logoWhite from "@/assets/images/logo/logo-white.svg"
 import logo from "@/assets/images/logo/logo.svg"
 import {ref} from "vue";
 
@@ -15,6 +12,9 @@ const form = ref({
     email:'',
     password:''
 })
+const toast = useToast()
+const router = useRouter()
+const store = useAuthStore()
 const errors = ref([])
 const processing = ref(false)
 const clearErrors = (val) => {
@@ -25,11 +25,14 @@ const onSubmit = async () => {
     processing.value = true
     try {
         let response = await axios.post('/api/auth/login',form.value)
-        window.localStorage.setItem('boost_user',response.data.user)
-        window.localStorage.setItem('boost_token',response.data.access_token)
         processing.value = false
-        console.log(response)
-    }catch (e) {
+        toast("Login successful")
+        window.localStorage.setItem('boost_user',JSON.stringify(response.data.user))
+        window.localStorage.setItem('boost_token',JSON.stringify(response.data.access_token))
+        store.authenticated = true
+        router.push({name:'home'})
+      }catch (e) {
+        console.log(e)
         if(e.response.status === 422) {
             errors.value = e.response.data.errors
         }
@@ -63,10 +66,11 @@ const onSubmit = async () => {
                         :error="errors.email ? errors.email[0] : ''"
                         classInput="h-[48px]"
                     />
+
                     <Textinput
                         label="Password"
                         type="password"
-                        placeholder="8+ characters, 1 capitat letter "
+                        placeholder="Password"
                         name="password"
                         @input="clearErrors('password')"
                         v-model="form.password"
@@ -84,7 +88,10 @@ const onSubmit = async () => {
                 >
 
                 </div>
-                <div class="max-w-[242px] mx-auto mt-5 w-full">
+                <div class="max-w-[242px] mx-auto mt-5 w-full text-center">
+
+                         <router-link class="text-slate-900 dark:text-white font-medium hover:underline"
+                          :to="{name:'forget_password'}">Forget Password</router-link>
 
                 </div>
                 <div

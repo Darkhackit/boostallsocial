@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -18,7 +19,7 @@ class ConfirmCodeController extends Controller
         $user = User::whereEmail($request->email)->first();
         if(now()->gt($user->code_expiry)) {
             return response()->json(["errors" => [
-                "code" => ["The entred code has expired"]
+                "code" => ["The entered code has expired"]
             ]],Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         if($user->code !== $request->code) {
@@ -27,8 +28,7 @@ class ConfirmCodeController extends Controller
             ]],Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         $user->code = "";
-        $user->code_expiry = "";
-        $user->email_verified_at = now();
+        $user->email_verified_at = Carbon::now();
 
         $user->update();
 

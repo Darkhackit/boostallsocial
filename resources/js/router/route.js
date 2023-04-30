@@ -54,6 +54,18 @@ const route = [
                 name:'confirm_code',
                 component:() => import("../views/auth/client/confirm_token.vue")
 
+            },
+            {
+                path:'forget-password',
+                name:'forget_password',
+                component:() => import("../views/auth/client/forget-password.vue")
+
+            },
+            {
+                path:'change-password',
+                name:'change_password',
+                component:() => import("../views/auth/client/change_password.vue")
+
             }
         ]
     }

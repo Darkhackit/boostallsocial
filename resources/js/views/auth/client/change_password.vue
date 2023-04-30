@@ -5,17 +5,21 @@ import { useAuthStore } from "@/store/auth";
 import { useRouter,useRoute } from "vue-router";
 import { useToast } from "vue-toastification";
 // Image Import
+import loginBg from "@/assets/images/all-img/page-bg.png"
+import logoWhite from "@/assets/images/logo/logo-white.svg"
 import logo from "@/assets/images/logo/logo.svg"
 import {ref} from "vue";
 
+
 const router = useRouter()
 const route = useRoute()
+const store = useAuthStore()
 const form = ref({
-    email:route.params.email,
-    code:'',
+    email:store.changePasswordEmail,
+    password:'',
+    password_confirmation:''
 })
 const errors = ref([])
-const store = useAuthStore()
 const processing = ref(false)
 const clearErrors = (val) => {
     delete errors.value[val]
@@ -24,21 +28,10 @@ const clearErrors = (val) => {
 const onSubmit = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/auth/code_confirm',form.value)
+        let response = await axios.post('/api/auth/change_password',form.value)
+        router.push({name:'login'})
         processing.value = false
-        console.log(response)
-        if(route.query.r) {
-            store.changePasswordEmail = response.data.user.email
-            router.push({name:'change_password',query:{email:response.data.user.email}})
-
-        }else {
-            window.localStorage.setItem('boost_user',response.data.user)
-            window.localStorage.setItem('boost_token',response.data.access_token)
-            store.authenticated = true
-            router.replace({name:'home'})
-        }
     }catch (e) {
-        console.log(e)
         if(e.response.status === 422) {
             errors.value = e.response.data.errors
         }
@@ -56,34 +49,37 @@ const onSubmit = async () => {
                     /></router-link>
                 </div>
                 <div class="mb-5 text-center 2xl:mb-10">
-                    <h4 class="font-medium">Code Confirmation</h4>
-
+                    <h4 class="font-medium">Change Password</h4>
+                    <div class="text-base text-slate-500 dark:text-slate-400">
+                        Sign in to your account to start using Boostallsocial
+                    </div>
                 </div>
                 <form @submit.prevent="onSubmit" class="space-y-4">
                     <Textinput
-                        label="Email"
-                        type="email"
-                        readonly
-                        disabled
-                        placeholder="Type your email"
-                        name="emil"
-                        @input="clearErrors('email')"
-                        v-model="form.email"
-                        :error="errors.email ? errors.email[0] : ''"
+                        label="Password"
+                        type="password"
+                        placeholder="New Password "
+                        name="password"
+                        @input="clearErrors('password')"
+                        v-model="form.password"
+                        :error="errors.password ? errors.password[0] : ''"
+                        hasicon
                         classInput="h-[48px]"
                     />
                     <Textinput
-                        label="Code"
-                        type="number"
-                        placeholder="Enter code "
-                        @input="clearErrors('code')"
-                        v-model="form.code"
-                        :error="errors.code ? errors.code[0] : ''"
-                        classInput="h-[48px]"
-                    />
+                    label="Password Confirmation"
+                    type="password"
+                    placeholder="Password Confirmation "
+                    name="password"
+                    @input="clearErrors('password_confirmation')"
+                    v-model="form.password_confirmation"
+                    :error="errors.password_confirmation ? errors.password_confirmation[0] : ''"
+                    hasicon
+                    classInput="h-[48px]"
+                />
 
                     <button type="submit" :disabled="processing" class="block w-full text-center btn btn-dark">
-                        Verify
+                        Change Password
                     </button>
                 </form>
                 <div
@@ -102,7 +98,7 @@ const onSubmit = async () => {
                         :to="{name:'login'}"
                         class="font-medium text-slate-900 dark:text-white hover:underline"
                     >
-                        Sign Up</router-link
+                        Sign In</router-link
                     >
                 </div>
             </div>

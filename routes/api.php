@@ -7,6 +7,9 @@ Route::group(['middleware' => 'api' , 'prefix' => 'auth'] , function ($route) {
     Route::post('/login',\App\Http\Controllers\Client\LoginController::class);
     Route::post('/register',\App\Http\Controllers\Client\RegisterController::class);
     Route::post('/code_confirm',\App\Http\Controllers\Client\ConfirmCodeController::class);
+    Route::post('/forget_password',\App\Http\Controllers\Client\ForgetPasswordController::class);
+    Route::post('/change_password',\App\Http\Controllers\Client\ChangePasswordController::class);
+    Route::post('/lost_but_found',[\App\Http\Controllers\Admin\AdminAuthController::class,'login']);
 });
 
 Route::post('/add-provider',[\App\Http\Controllers\ProviderController::class,'create']);

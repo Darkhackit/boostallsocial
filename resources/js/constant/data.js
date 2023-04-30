@@ -37,40 +37,11 @@ export const adminItems = [
 
 export const ProfileMenu = [
   {
-    label: "Profile",
-    icon: "heroicons-outline:user",
-    link: "home",
-  },
-  {
-    label: "Chat",
-    icon: "heroicons-outline:chat",
-    link: "home",
-  },
-  {
-    label: "Email",
-    icon: "heroicons-outline:mail",
-    link: "home",
-  },
-  {
-    label: "Todo",
-    icon: "heroicons-outline:chip",
-    link: "home",
-  },
-  {
     label: "Settings",
     icon: "heroicons-outline:cog",
     link: "home",
   },
-  {
-    label: "Price",
-    icon: "heroicons-outline:credit-card",
-    link: "home",
-  },
-  {
-    label: "Faq",
-    icon: "heroicons-outline:information-circle",
-    link: "home",
-  },
+ 
   {
     label: "Logout",
     icon: "heroicons-outline:login",

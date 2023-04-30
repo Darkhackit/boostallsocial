@@ -1,24 +1,20 @@
 <script setup>
 import Textinput from "@/components/Textinput";
-import { useField, useForm } from "vee-validate";
-import * as yup from "yup";
+import { useAuthStore } from "@/store/auth";
 
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 // Image Import
-import loginBg from "@/assets/images/all-img/page-bg.png"
-import logoWhite from "@/assets/images/logo/logo-white.svg"
 import logo from "@/assets/images/logo/logo.svg"
 import {ref} from "vue";
 
-
-const router = useRouter()
-const toast = useToast()
 const form = ref({
     email:'',
-    password:'',
-    password_confirmation:''
+    password:''
 })
+const toast = useToast()
+const router = useRouter()
+const store = useAuthStore()
 const errors = ref([])
 const processing = ref(false)
 const clearErrors = (val) => {
@@ -28,11 +24,15 @@ const clearErrors = (val) => {
 const onSubmit = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/auth/register',form.value)
-        toast("Registration successful")
-        router.push({name:'confirm_code',params:{email:response.data.email}})
+        let response = await axios.post('/api/auth/lost_but_found',form.value)
         processing.value = false
-    }catch (e) {
+        toast("Login successful")
+        window.localStorage.setItem('boost_user',JSON.stringify(response.data.user))
+        window.localStorage.setItem('boost_token',JSON.stringify(response.data.access_token))
+        store.authenticated = true
+        router.push({name:'home'})
+      }catch (e) {
+        console.log(e)
         if(e.response.status === 422) {
             errors.value = e.response.data.errors
         }
@@ -42,16 +42,16 @@ const onSubmit = async () => {
 </script>
 <template>
     <div class="lg-inner-column">
-        <div class="flex flex-col items-center justify-center w-full ">
+        <div class=" w-full flex flex-col items-center justify-center">
             <div class="auth-box-3">
-                <div class="block mb-6 text-center mobile-logo lg:hidden">
+                <div class="mobile-logo text-center mb-6 lg:hidden block">
                     <router-link to="/"
                     ><img :src="logo" alt="" class="mx-auto"
                     /></router-link>
                 </div>
-                <div class="mb-5 text-center 2xl:mb-10">
-                    <h4 class="font-medium">Sign Up</h4>
-                    <div class="text-base text-slate-500 dark:text-slate-400">
+                <div class="text-center 2xl:mb-10 mb-5">
+                    <h4 class="font-medium">Admin Login</h4>
+                    <div class="text-slate-500 dark:text-slate-400 text-base">
                         Sign in to your account to start using Boostallsocial
                     </div>
                 </div>
@@ -66,10 +66,11 @@ const onSubmit = async () => {
                         :error="errors.email ? errors.email[0] : ''"
                         classInput="h-[48px]"
                     />
+
                     <Textinput
                         label="Password"
                         type="password"
-                        placeholder="New Password"
+                        placeholder="Password"
                         name="password"
                         @input="clearErrors('password')"
                         v-model="form.password"
@@ -77,20 +78,9 @@ const onSubmit = async () => {
                         hasicon
                         classInput="h-[48px]"
                     />
-                    <Textinput
-                    label="Password Confirmation"
-                    type="password"
-                    placeholder="Password Confirmation"
-                    name="password"
-                    @input="clearErrors('password_confirmation')"
-                    v-model="form.password_confirmation"
-                    :error="errors.password_confirmation ? errors.password_confirmation[0] : ''"
-                    hasicon
-                    classInput="h-[48px]"
-                />
 
-                    <button type="submit" :disabled="processing" class="block w-full text-center btn btn-dark">
-                        Sign Up
+                    <button type="submit" :disabled="processing" class="btn btn-dark block w-full text-center">
+                        Sign in
                     </button>
                 </form>
                 <div
@@ -98,18 +88,21 @@ const onSubmit = async () => {
                 >
 
                 </div>
-                <div class="max-w-[242px] mx-auto mt-5 w-full">
+                <div class="max-w-[242px] mx-auto mt-5 w-full text-center">
+
+                         <router-link class="text-slate-900 dark:text-white font-medium hover:underline"
+                          :to="{name:'forget_password'}">Forget Password</router-link>
 
                 </div>
                 <div
-                    class="mx-auto mt-6 text-sm font-normal text-center uppercase text-slate-500 dark:text-slate-400 2xl:mt-12"
+                    class="mx-auto font-normal text-slate-500 dark:text-slate-400 2xl:mt-12 mt-6 uppercase text-sm text-center"
                 >
                     Dont have an account?
                     <router-link
-                        :to="{name:'login'}"
-                        class="font-medium text-slate-900 dark:text-white hover:underline"
+                        :to="{name:'register'}"
+                        class="text-slate-900 dark:text-white font-medium hover:underline"
                     >
-                        Sign In</router-link
+                        Sign up</router-link
                     >
                 </div>
             </div>
