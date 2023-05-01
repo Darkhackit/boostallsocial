@@ -4,6 +4,7 @@
 
 <script>
 import { useThemeSettingsStore } from "@/store/themeSettings";
+import { useAuthStore } from "@/store/auth";
 
 export default {
     computed: {
@@ -12,6 +13,7 @@ export default {
     },
   mounted() {
     this.$store.themeSettingsStore = useThemeSettingsStore()
+    this.$store.useAuthStore = useAuthStore()
   }
 }
 </script>

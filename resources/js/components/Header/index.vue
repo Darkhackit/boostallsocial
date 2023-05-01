@@ -52,11 +52,10 @@
         <div
           class="nav-tools flex items-center lg:space-x-6 space-x-3 rtl:space-x-reverse"
         >
-          <LanguageVue />
           <SwitchDark />
-          <MonochromeMode />
-          <Message v-if="window.width > 768" />
-          <Notification v-if="window.width > 768" />
+            <div>
+                <router-link class="text-slate-900 dark:text-white font-medium hover:underline" :to="{name:'home'}">GHC 20</router-link>
+            </div>
           <Profile v-if="window.width > 768" />
           <handle-mobile-menu v-if="window.width < 768" />
         </div>

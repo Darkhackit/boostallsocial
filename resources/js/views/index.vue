@@ -62,45 +62,6 @@ const getService = debounce(async (e) => {
                   </vSelect>
               </VueSelect>
           </div>
-         <div class="mt-5">
-             <h1 class="text-lg">Popular Service</h1>
-             <div class="flex justify-between mt-3">
-                 <div class="flex">
-                     <img style="width: 25px;border-radius: 50%" src="https://cdn.mypanel.link/7jxbtu/ztko0n5ztzrp8hh6.png">
-                     <div class="ml-10">
-                         <p class="text-[1rem]">Instagram Followers</p>
-                     </div>
-                 </div>
-                 <div>
-                     <Icon icon="heroicons:arrow-right" />
-                 </div>
-             </div>
-             <div class="flex justify-between mt-3">
-                 <div class="flex">
-                     <img style="width: 25px;border-radius: 50%" src="https://cdn.mypanel.link/7jxbtu/ztko0n5ztzrp8hh6.png">
-                     <div class="ml-10">
-                         <p class="text-[1rem]">Instagram Followers</p>
-                     </div>
-                 </div>
-                 <div>
-                     <Icon icon="heroicons:arrow-right" />
-                 </div>
-             </div>
-             <div class="flex justify-between mt-3 cursor-pointer">
-                 <div class="flex">
-                     <img style="width: 25px;border-radius: 50%" src="https://cdn.mypanel.link/7jxbtu/ztko0n5ztzrp8hh6.png">
-                     <div class="ml-10">
-                         <p class="text-[1rem] text-gray-950 dark:text-white">Instagram Followers</p>
-                     </div>
-                 </div>
-                 <div>
-                     <Icon icon="heroicons:arrow-right" />
-                 </div>
-             </div>
-
-
-
-         </div>
       </div>
       <div></div>
   </div>
