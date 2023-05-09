@@ -7,6 +7,8 @@ import { useToast } from "vue-toastification";
 // Image Import
 import logo from "@/assets/images/logo/logo.svg"
 import {ref} from "vue";
+import Button from "@/components/Button/index.vue";
+import axiosClient from "@/plugins/axios";
 
 const form = ref({
     email:'',
@@ -17,24 +19,39 @@ const router = useRouter()
 const store = useAuthStore()
 const errors = ref([])
 const processing = ref(false)
+const showVerify = ref(false)
 const clearErrors = (val) => {
     delete errors.value[val]
+}
+const ShowVerifyEmail = async () => {
+    processing.value = true
+    try {
+       let response = await axiosClient.post('/api/auth/verify_email',{email:form.value.email})
+        processing.value = false
+       await  router.push({name:'confirm_code',params:{email:response.data.email}})
+    }catch (e) {
+        console.log(e.response)
+        processing.value = false
+    }
 }
 
 const onSubmit = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/auth/login',form.value)
+        let response = await axiosClient.post('/api/auth/login',form.value)
         processing.value = false
         toast("Login successful")
         window.localStorage.setItem('boost_user',JSON.stringify(response.data.user))
         window.localStorage.setItem('boost_token',JSON.stringify(response.data.access_token))
         store.authenticated = true
-        router.push({name:'home'})
+        await router.push({name:'home'})
       }catch (e) {
         console.log(e)
         if(e.response.status === 422) {
             errors.value = e.response.data.errors
+        }
+        if(e.response.status === 417) {
+            showVerify.value = true
         }
         processing.value = false
     }
@@ -66,6 +83,7 @@ const onSubmit = async () => {
                         :error="errors.email ? errors.email[0] : ''"
                         classInput="h-[48px]"
                     />
+                    <small @click="ShowVerifyEmail" v-if="!errors.length && showVerify" class="text-red-500 cursor-pointer">click here to verify email</small>
 
                     <Textinput
                         label="Password"
@@ -79,9 +97,10 @@ const onSubmit = async () => {
                         classInput="h-[48px]"
                     />
 
-                    <button type="submit" :disabled="processing" class="btn btn-dark block w-full text-center">
+                    <Button type="submit" btnClass="btn-dark" :is-loading="processing" :is-disabled="processing" class="btn btn-dark block w-full text-center">
+
                         Sign in
-                    </button>
+                    </Button>
                 </form>
                 <div
                     className=" relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6"

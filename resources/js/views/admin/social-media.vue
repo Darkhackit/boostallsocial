@@ -12,6 +12,7 @@ const processing = ref(false)
 import {onMounted, ref} from "vue";
 import Service from "@/components/service.vue";
 import Checkbox from "@/components/Checkbox/index.vue";
+import axiosClient from "@/plugins/axios";
 const perpage = ref(10)
 const searchTerm = ref("")
 const show = ref(false)
@@ -105,7 +106,7 @@ const clearError = (val) => {
 const deleteProvider = async (id) => {
     if (window.confirm('Are you sure?')) {
         try {
-            await axios.delete(`/api/delete-social/${id}`)
+            await axiosClient.delete(`/api/delete-social/${id}`)
             await getData()
         }catch (e) {
             console.log(e.response)
@@ -115,7 +116,7 @@ const deleteProvider = async (id) => {
 const viewProvider = async (id) => {
     loadingService.value = true
     try {
-        let response = await axios.get(`/api/view-social/${id}`)
+        let response = await axiosClient.get(`/api/view-social/${id}`)
         ed_social.value.name = response.data.name
         ed_social.value.id = response.data.id
         ed_social.value.image = response.data.image
@@ -140,7 +141,7 @@ const viewProvider = async (id) => {
 const addData = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/add-social-media-service',socialMedia.value)
+        let response = await axiosClient.post('/api/add-social-media-service',socialMedia.value)
         console.log(response)
         socialMedia.value.name = ""
         socialMedia.value.image = ""
@@ -159,7 +160,7 @@ const addData = async () => {
 const updateServiceProvider = async () => {
     processing.value = true
     try {
-        await axios.put(`/api/update-social/${ed_social.value.id}`,ed_social.value)
+        await axiosClient.put(`/api/update-social/${ed_social.value.id}`,ed_social.value)
         processing.value = false
         await getData()
         showEditModal.value = false
@@ -173,7 +174,7 @@ const updateServiceProvider = async () => {
 const getData = async () => {
     loadingService.value = true
     try {
-        let response = await axios.get('/api/get-social-media')
+        let response = await axiosClient.get('/api/get-social-media')
         providers.value = response.data
         console.log(response)
         loadingService.value = false

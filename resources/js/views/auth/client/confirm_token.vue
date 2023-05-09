@@ -7,6 +7,8 @@ import { useToast } from "vue-toastification";
 // Image Import
 import logo from "@/assets/images/logo/logo.svg"
 import {ref} from "vue";
+import Button from "@/components/Button/index.vue";
+import axiosClient from "@/plugins/axios";
 
 const router = useRouter()
 const route = useRoute()
@@ -24,18 +26,18 @@ const clearErrors = (val) => {
 const onSubmit = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/auth/code_confirm',form.value)
+        let response = await axiosClient.post('/api/auth/code_confirm',form.value)
         processing.value = false
         console.log(response)
         if(route.query.r) {
             store.changePasswordEmail = response.data.user.email
-            router.push({name:'change_password',query:{email:response.data.user.email}})
+            await router.push({name:'change_password',query:{email:response.data.user.email}})
 
         }else {
-            window.localStorage.setItem('boost_user',response.data.user)
-            window.localStorage.setItem('boost_token',response.data.access_token)
+            window.localStorage.setItem('boost_user',JSON.stringify(response.data.user))
+            window.localStorage.setItem('boost_token',JSON.stringify(response.data.access_token))
             store.authenticated = true
-            router.replace({name:'home'})
+            await router.replace({name:'home'})
         }
     }catch (e) {
         console.log(e)
@@ -82,9 +84,9 @@ const onSubmit = async () => {
                         classInput="h-[48px]"
                     />
 
-                    <button type="submit" :disabled="processing" class="block w-full text-center btn btn-dark">
+                    <Button type="submit" :is-loading="processing" btn-class="btn-dark" :is-disabled="processing" class="block w-full text-center btn btn-dark">
                         Verify
-                    </button>
+                    </Button>
                 </form>
                 <div
                     className=" relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6"

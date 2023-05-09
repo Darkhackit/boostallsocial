@@ -9,6 +9,8 @@ import loginBg from "@/assets/images/all-img/page-bg.png"
 import logoWhite from "@/assets/images/logo/logo-white.svg"
 import logo from "@/assets/images/logo/logo.svg"
 import {ref} from "vue";
+import Button from "@/components/Button/index.vue";
+import axiosClient from "@/plugins/axios";
 
 
 const router = useRouter()
@@ -28,8 +30,8 @@ const clearErrors = (val) => {
 const onSubmit = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/auth/change_password',form.value)
-        router.push({name:'login'})
+        let response = await axiosClient.post('/api/auth/change_password',form.value)
+        await router.push({name:'login'})
         processing.value = false
     }catch (e) {
         if(e.response.status === 422) {
@@ -78,9 +80,9 @@ const onSubmit = async () => {
                     classInput="h-[48px]"
                 />
 
-                    <button type="submit" :disabled="processing" class="block w-full text-center btn btn-dark">
+                    <Button :is-loading="processing" btn-class="btn-dark" type="submit" :is-disabled="processing" class="block w-full text-center btn btn-dark">
                         Change Password
-                    </button>
+                    </Button>
                 </form>
                 <div
                     className=" relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6"

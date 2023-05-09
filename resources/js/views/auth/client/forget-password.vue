@@ -10,6 +10,8 @@ import loginBg from "@/assets/images/all-img/page-bg.png"
 import logoWhite from "@/assets/images/logo/logo-white.svg"
 import logo from "@/assets/images/logo/logo.svg"
 import {ref} from "vue";
+import Button from "@/components/Button/index.vue";
+import axiosClient from "@/plugins/axios";
 
 const router = useRouter()
 const form = ref({
@@ -24,8 +26,8 @@ const clearErrors = (val) => {
 const onSubmit = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/auth/forget_password',form.value)
-        router.push({name:'confirm_code',params:{email:response.data.email},query:{r:'forget_password'}})
+        let response = await axiosClient.post('/api/auth/forget_password',form.value)
+        await router.push({name:'confirm_code',params:{email:response.data.email},query:{r:'forget_password'}})
         processing.value = false
         console.log(response)
     }catch (e) {
@@ -48,7 +50,7 @@ const onSubmit = async () => {
                 <div class="text-center 2xl:mb-10 mb-5">
                     <h4 class="font-medium">Forget Password</h4>
                     <div class="text-slate-500 dark:text-slate-400 text-base">
-                        Sign in to your account to start using Boostallsocial
+                        A confirmation code will be sent to your email address
                     </div>
                 </div>
                 <form @submit.prevent="onSubmit" class="space-y-4">
@@ -63,9 +65,9 @@ const onSubmit = async () => {
                         classInput="h-[48px]"
                     />
 
-                    <button type="submit" :disabled="processing" class="btn btn-dark block w-full text-center">
+                    <Button :is-loading="processing" btn-class="btn-dark" type="submit" :is-disabled="processing" class="btn btn-dark block w-full text-center">
                         Reset Password
-                    </button>
+                    </Button>
                 </form>
                 <div
                     className=" relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6"

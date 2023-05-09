@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class AdminAuthController extends Controller
 {
-    public function login(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function login(Request $request): JsonResponse
     {
         $this->validate($request,[
             'email' => ['required'],
@@ -24,7 +29,7 @@ class AdminAuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'expires_in' => auth('admins')->factory()->getTTL() * 60,
             'user' => [
                 'name' => auth('admins')->user()->name,
                 'email' => auth('admins')->user()->email,

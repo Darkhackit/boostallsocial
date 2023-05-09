@@ -2,7 +2,6 @@ const route = [
   {
     path: "/",
     name: "Layout",
-    redirect: "/home",
     component: () => import("@/Layout/index.vue"),
     children: [
       {
@@ -14,6 +13,21 @@ const route = [
             path: "/service_details/:id",
             name: "social-details",
             component: () => import("@/views/social-media/service-details.vue"),
+        },
+        {
+            path: "/rent-number",
+            name: "rent-number",
+            component: () => import("@/views/index.vue"),
+        },
+        {
+            path: "/add-funds",
+            name: "add-funds",
+            component: () => import("@/views/payment/index.vue"),
+        },
+        {
+            path: "/affiliate",
+            name: "affiliate",
+            component: () => import("@/views/affilite/index.vue"),
         },
         {
             path: "/chat",

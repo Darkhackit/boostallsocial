@@ -15,7 +15,7 @@
       >
         <span
           class="overflow-hidden text-ellipsis whitespace-nowrap w-[85px] block"
-          >Priscilla</span
+          >{{user?.name}}</span
         >
         <span class="text-base inline-block ltr:ml-[10px] rtl:mr-[10px]"
           ><Icon icon="heroicons-outline:chevron-down"></Icon
@@ -83,6 +83,11 @@ export default {
       ],
     };
   },
+    computed: {
+      user() {
+          return JSON.parse(window.localStorage.getItem('boost_user'))
+      }
+    }
 };
 </script>
 <style lang=""></style>

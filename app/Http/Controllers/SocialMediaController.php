@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\SocialMedia;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 
 class SocialMediaController extends Controller
@@ -36,9 +37,9 @@ class SocialMediaController extends Controller
     public function create(Request $request): JsonResponse
     {
         $this->validate($request,[
-            'name' => ['required','unique:providers'],
-            'image' => ['required','url','unique:providers'],
-            'input_format' => ['required','unique:providers'],
+            'name' => ['required','unique:social_media'],
+            'image' => ['required','url'],
+            'input_format' => ['required'],
         ]);
         $social_media = new SocialMedia();
         $this->extracted($request, $social_media);
@@ -132,27 +133,49 @@ class SocialMediaController extends Controller
     {
         $service = SocialMedia::whereName($val)->first();
 
-        return response()->json([
-            'name' => $service->name,
-            'format' => $service->format,
-            'show_link' => $service->show_link,
-            'show_comments' => $service->show_comments,
-            'show_quantity' => $service->show_quantity,
-            'show_usernames' => $service->show_usernames,
-            'show_username' => $service->show_username,
-            'show_hashtags' => $service->show_hashtags,
-            'show_answer_number' => $service->show_answer_number,
-            'show_groups' => $service->show_groups,
-            'countries' => $service->countries->map(function ($country) {
-                return [
-                    'name' => $country->name,
-                    'price' => $country->price,
-                    'min' => $country->min,
-                    'max' => $country->max,
-                    'description' => $country->description,
+        try {
+            $location = Http::get("http://www.geoplugin.net/json.gp?ip=".$this->getIp())->json();
+            return response()->json([
+                'name' => $service->name,
+                'format' => $service->format,
+                'show_link' => $service->show_link,
+                'show_comments' => $service->show_comments,
+                'show_quantity' => $service->show_quantity,
+                'show_usernames' => $service->show_usernames,
+                'show_username' => $service->show_username,
+                'show_hashtags' => $service->show_hashtags,
+                'show_answer_number' => $service->show_answer_number,
+                'show_groups' => $service->show_groups,
+                'countries' => $service->countries->map(function ($country) use ($location) {
+                    return [
+                        'name' => $country->name,
+                        'price' => number_format($country->price * $location['geoplugin_currencyConverter'],2),
+                        'min' => $country->min,
+                        'max' => $country->max,
+                        'currency' => $location['geoplugin_currencyCode'] ,
+                        'description' => $country->description,
 
-                ];
-            })
-        ]);
+                    ];
+                })
+            ]);
+        }catch (\Exception $exception) {
+
+        }
+
+    }
+    public function getIp(): ?string
+    {
+        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
+            if (array_key_exists($key, $_SERVER) === true){
+                foreach (explode(',', $_SERVER[$key]) as $ip){
+                    $ip = trim($ip); // just to be safe
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
+                        return $ip;
+                    }
+                }
+            }
+        }
+//        return request()->ip(); // it will return the server IP if the client IP is not found using this method.
+        return  "196.61.40.241";
     }
 }

@@ -11,6 +11,7 @@ import Modal from '@/components/Modal/Modal';
 const processing = ref(false)
 import {onMounted, ref} from "vue";
 import Service from "@/components/service.vue";
+import axiosClient from "@/plugins/axios";
  const perpage = ref(10)
  const searchTerm = ref("")
 const show = ref(false)
@@ -88,7 +89,7 @@ const clearError = (val) => {
 const deleteProvider = async (id) => {
     if (window.confirm('Are you sure?')) {
         try {
-            await axios.delete(`/api/delete-provider/${id}`)
+            await axiosClient.delete(`/api/delete-provider/${id}`)
             await getData()
         }catch (e) {
             console.log(e.response)
@@ -98,7 +99,7 @@ const deleteProvider = async (id) => {
 const viewProvider = async (id) => {
      loadingService.value = true
     try {
-        let response = await axios.get(`/api/target-country/${id}`)
+        let response = await axiosClient.get(`/api/target-country/${id}`)
         ed_provider.value.name = response.data.name
         ed_provider.value.url = response.data.url
         ed_provider.value.type = response.data.type
@@ -115,7 +116,7 @@ const viewProvider = async (id) => {
 const getProviderService = async (id) => {
     loadingService.value = true
     try {
-        let response = await axios.get(`/api/service-provider/${id}`)
+        let response = await axiosClient.get(`/api/service-provider/${id}`)
         services.value = response.data?.services
         service_name.value = response.data?.name
         console.log(response)
@@ -130,7 +131,7 @@ const getProviderService = async (id) => {
 const addData = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/add-provider',provider.value)
+        let response = await axiosClient.post('/api/add-provider',provider.value)
         console.log(response)
         provider.value.name = ""
         provider.value.url = ""
@@ -150,7 +151,7 @@ const addData = async () => {
 const updateServiceProvider = async () => {
     processing.value = true
     try {
-        await axios.put(`/api/update-provider/${ed_provider.value.id}`,ed_provider.value)
+        await axiosClient.put(`/api/update-provider/${ed_provider.value.id}`,ed_provider.value)
         processing.value = false
         await getData()
         showEditModal.value = false
@@ -164,12 +165,12 @@ const updateServiceProvider = async () => {
 const getData = async () => {
      loadingService.value = true
     try {
-        let response = await axios.get('/api/get-provider')
+        let response = await axiosClient.get('/api/get-provider')
         providers.value = response.data
         console.log(response)
         loadingService.value = false
     }catch (e) {
-        console.log(e.response)
+        console.log(e)
         loadingService.value = false
     }
 }

@@ -15,7 +15,7 @@
       >
         <span
           class="overflow-hidden text-ellipsis whitespace-nowrap w-[85px] block"
-          >Priscilla</span
+          >{{ user.name }}</span
         >
         <span class="text-base inline-block ltr:ml-[10px] rtl:mr-[10px]"
           ><Icon icon="heroicons-outline:chevron-down"></Icon
@@ -26,6 +26,7 @@
       <MenuItem v-slot="{ active }" v-for="(item, i) in ProfileMenu" :key="i">
         <div
           type="button"
+          @click="item.link()"
           :class="`${
             active
               ? 'bg-slate-100 dark:bg-slate-700 dark:bg-opacity-70 text-slate-900 dark:text-slate-300'
@@ -56,38 +57,15 @@ export default {
     Dropdown,
     MenuItem,
   },
+    computed: {
+        user() {
+            return JSON.parse(localStorage.getItem('boost_user'))
+        },
+    },
   data() {
     return {
       profileImg,
       ProfileMenu: [
-        {
-          label: "Profile",
-          icon: "heroicons-outline:user",
-          link: () => {
-            this.$router.push("home");
-          },
-        },
-        {
-          label: "Chat",
-          icon: "heroicons-outline:chat",
-          link: () => {
-            this.$router.push("home");
-          },
-        },
-        {
-          label: "Email",
-          icon: "heroicons-outline:mail",
-          link: () => {
-            this.$router.push("home");
-          },
-        },
-        {
-          label: "Todo",
-          icon: "heroicons-outline:clipboard-check",
-          // link: () => {
-          //   this.$router.push("todo");
-          // },
-        },
         {
           label: "Settings",
           icon: "heroicons-outline:cog",
@@ -96,26 +74,15 @@ export default {
           // },
         },
         {
-          label: "Price",
-          icon: "heroicons-outline:credit-card",
-          // link: () => {
-          //   this.$router.push("pricing");
-          // },
-        },
-        {
-          label: "Faq",
-          icon: "heroicons-outline:information-circle",
-          // link: () => {
-          //   this.$router.push("faq");
-          // },
-        },
-        {
           label: "Logout",
           icon: "heroicons-outline:login",
-          // link: () => {
-          //   this.$router.push("/");
-          //   localStorage.removeItem("activeUser");
-          // },
+          link: () => {
+              this.$store.useAuthStore.authenticated = false
+              window.localStorage.removeItem("boost_user");
+              window.localStorage.removeItem("boost_token");
+              this.$router.push({name:'login'});
+
+          },
         },
       ],
     };

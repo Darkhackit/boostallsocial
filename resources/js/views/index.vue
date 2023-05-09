@@ -7,6 +7,8 @@ import vSelect from "vue-select";
 const loadingService = ref(false)
 import {ref} from "vue";
 import {debounce} from "lodash";
+import axiosClient from "@/plugins/axios";
+import Card from "@/components/Card/index.vue";
 const  services= ref([])
 const service = ref("")
 const router = useRouter()
@@ -19,11 +21,11 @@ const getService = debounce(async (e) => {
     if (e === "") return
     loadingService.value = true
     try {
-        let response = await axios.get(`/api/get-service?q=${e}`)
+        let response = await axiosClient.get(`/api/get-service?q=${e}`)
         loadingService.value = false
         services.value = response.data.data
     }catch (err) {
-        console.log(err.response)
+        console.log(err)
         loadingService.value = false
     }
 },500)
@@ -31,7 +33,7 @@ const getService = debounce(async (e) => {
 <template>
   <div class="grid sm:grid-cols-3 text-center justify-center items-center mt-3">
       <div></div>
-      <div>
+      <Card>
           <h1 class="text-4xl font-bold">Service</h1>
           <div class="mt-6 font-medium">
               <p class="text-muted text-slate-500">Please Choose The Website Or App</p>
@@ -62,7 +64,7 @@ const getService = debounce(async (e) => {
                   </vSelect>
               </VueSelect>
           </div>
-      </div>
+      </Card>
       <div></div>
   </div>
 </template>

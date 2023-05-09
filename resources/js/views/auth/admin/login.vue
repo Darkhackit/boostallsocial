@@ -7,6 +7,7 @@ import { useToast } from "vue-toastification";
 // Image Import
 import logo from "@/assets/images/logo/logo.svg"
 import {ref} from "vue";
+import axiosClient from "@/plugins/axios";
 
 const form = ref({
     email:'',
@@ -24,13 +25,13 @@ const clearErrors = (val) => {
 const onSubmit = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/auth/lost_but_found',form.value)
+        let response = await axiosClient.post('/api/auth/lost_but_found',form.value)
         processing.value = false
         toast("Login successful")
         window.localStorage.setItem('boost_user',JSON.stringify(response.data.user))
         window.localStorage.setItem('boost_token',JSON.stringify(response.data.access_token))
         store.authenticated = true
-        router.push({name:'home'})
+        await router.push({name:'home'})
       }catch (e) {
         console.log(e)
         if(e.response.status === 422) {

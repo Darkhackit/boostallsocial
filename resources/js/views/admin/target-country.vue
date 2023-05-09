@@ -5,14 +5,17 @@ import Textinput from "@/components/Textinput/index.vue";
 import Select from "@/components/Select/index.vue";
 import InputGroup from "@/components/InputGroup";
 import Textarea from "@/components/Textarea";
-
+import { QuillEditor } from "@vueup/vue-quill";
 import Button from "@/components/Button/index.vue";
 import Modal from '@/components/Modal/Modal';
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+
 const processing = ref(false)
 import {onMounted, ref} from "vue";
 import VueSelect from "@/components/Select/VueSelect.vue";
 import vSelect from "vue-select";
 import Checkbox from "@/components/Checkbox/index.vue";
+import axiosClient from "@/plugins/axios";
 const perpage = ref(10)
 const searchTerm = ref("")
 const show = ref(false)
@@ -120,7 +123,7 @@ const clearError = (val) => {
 const deleteProvider = async (id) => {
     if (window.confirm('Are you sure?')) {
         try {
-            await axios.delete(`/api/target-country/${id}`)
+            await axiosClient.delete(`/api/target-country/${id}`)
             await getData()
         }catch (e) {
             console.log(e.response)
@@ -131,7 +134,7 @@ const deleteProvider = async (id) => {
 const viewData = async (id) => {
     loadingService.value = true
     try {
-        let response = await axios.get(`/api/target-country/${id}`)
+        let response = await axiosClient.get(`/api/target-country/${id}`)
         ed_target_country.value.name = response.data.name
         ed_target_country.value.price = response.data.price
         ed_target_country.value.min = response.data.min
@@ -152,7 +155,7 @@ const viewData = async (id) => {
 const addData = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/target-country',target_country.value)
+        let response = await axiosClient.post('/api/target-country',target_country.value)
         console.log(response)
         target_country.value.name = ""
         target_country.value.description = ""
@@ -176,7 +179,7 @@ const addData = async () => {
 const updateServiceProvider = async () => {
     processing.value = true
     try {
-        await axios.put(`/api/target-country/${ed_target_country.value.id}`,ed_target_country.value)
+        await axiosClient.put(`/api/target-country/${ed_target_country.value.id}`,ed_target_country.value)
         processing.value = false
         await getData()
         showEditModal.value = false
@@ -191,7 +194,7 @@ const updateServiceProvider = async () => {
 const getProviders = async () => {
     loadingService.value = true
     try {
-        let response = await axios.get('/api/get-provider-names')
+        let response = await axiosClient.get('/api/get-provider-names')
         providers.value = response.data
         console.log(response)
         loadingService.value = false
@@ -203,7 +206,7 @@ const getProviders = async () => {
 const getMedias = async () => {
     loadingService.value = true
     try {
-        let response = await axios.get('/api/get-media-names')
+        let response = await axiosClient.get('/api/get-media-names')
         medias.value = response.data
         console.log(response)
         loadingService.value = false
@@ -215,7 +218,7 @@ const getMedias = async () => {
 const getData = async () => {
     loadingService.value = true
     try {
-        let response = await axios.get('/api/target-country')
+        let response = await axiosClient.get('/api/target-country')
         countries.value = response.data
         console.log(response)
         loadingService.value = false
@@ -346,7 +349,10 @@ onMounted(async () => {
                 <VueSelect  label="Social Media" class="">
                     <vSelect v-model="target_country.social_media" :options="medias" label="title"  placeholder="Search Service" />
                 </VueSelect>
-                <Textarea label="Description" v-model="target_country.description" placeholder="Description" />
+              <div>
+                  <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                  <quill-editor contentType="html" v-model:content="target_country.description" theme="snow"></quill-editor>
+              </div>
             </div>
             <div class="float-right mb-3">
                 <Button :isLoading="processing" @click.prevent="addData" btn-class="btn-dark">Add Social Media Service</Button>
@@ -417,7 +423,10 @@ onMounted(async () => {
                 <VueSelect  label="Social Media" class="">
                     <vSelect v-model="ed_target_country.social_media" :options="medias" label="title"  placeholder="Search Service" />
                 </VueSelect>
-                <Textarea label="Description" v-model="ed_target_country.description" placeholder="Description" />
+                <div>
+                    <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                    <quill-editor contentType="html" v-model:content="ed_target_country.description" theme="snow"></quill-editor>
+                </div>
             </div>>
             <div class="float-right mb-3">
                 <Button :isLoading="processing" @click.prevent="updateServiceProvider" btn-class="btn-dark">Update Target Country</Button>

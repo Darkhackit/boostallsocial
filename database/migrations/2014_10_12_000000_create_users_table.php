@@ -18,8 +18,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('code')->nullable();
+            $table->string('referral_id')->nullable();
             $table->timestamp('code_expiry')->nullable();
-            $table->float('balance')->default(0);
             $table->string('api_key');
             $table->rememberToken();
             $table->timestamps();

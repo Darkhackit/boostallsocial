@@ -41,7 +41,8 @@ class ConfirmCodeController extends Controller
             'user' => [
                 'name' => auth()->user()->name,
                 'email' => auth()->user()->email,
-                'balance' => auth()->user()->balance,
+                'balance' => auth()->user()->account->balance,
+                'currency' => auth()->user()->account->currency
             ]
         ],Response::HTTP_OK);
     }

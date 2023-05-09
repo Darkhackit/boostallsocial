@@ -3,21 +3,26 @@ import Textinput from "@/components/Textinput";
 import { useField, useForm } from "vee-validate";
 import * as yup from "yup";
 
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import { useToast } from "vue-toastification";
 // Image Import
 import loginBg from "@/assets/images/all-img/page-bg.png"
 import logoWhite from "@/assets/images/logo/logo-white.svg"
 import logo from "@/assets/images/logo/logo.svg"
-import {ref} from "vue";
+import {onMounted, ref, watch} from "vue";
+import Button from "@/components/Button/index.vue";
+import axiosClient from "@/plugins/axios";
+
 
 
 const router = useRouter()
+const route = useRoute()
 const toast = useToast()
 const form = ref({
     email:'',
     password:'',
-    password_confirmation:''
+    password_confirmation:'',
+    referral:''
 })
 const errors = ref([])
 const processing = ref(false)
@@ -25,12 +30,13 @@ const clearErrors = (val) => {
     delete errors.value[val]
 }
 
+
 const onSubmit = async () => {
     processing.value = true
     try {
-        let response = await axios.post('/api/auth/register',form.value)
+        let response = await axiosClient.post('/api/auth/register',form.value)
         toast("Registration successful")
-        router.push({name:'confirm_code',params:{email:response.data.email}})
+        await router.push({name:'confirm_code',params:{email:response.data.email}})
         processing.value = false
     }catch (e) {
         if(e.response.status === 422) {
@@ -39,6 +45,12 @@ const onSubmit = async () => {
         processing.value = false
     }
 }
+
+onMounted(() => {
+    if(route.query.r) {
+        form.value.referral = route.query.r
+    }
+})
 </script>
 <template>
     <div class="lg-inner-column">
@@ -52,7 +64,7 @@ const onSubmit = async () => {
                 <div class="mb-5 text-center 2xl:mb-10">
                     <h4 class="font-medium">Sign Up</h4>
                     <div class="text-base text-slate-500 dark:text-slate-400">
-                        Sign in to your account to start using Boostallsocial
+                        Create an account to start using Boostallsocial
                     </div>
                 </div>
                 <form @submit.prevent="onSubmit" class="space-y-4">
@@ -64,6 +76,13 @@ const onSubmit = async () => {
                         @input="clearErrors('email')"
                         v-model="form.email"
                         :error="errors.email ? errors.email[0] : ''"
+                        classInput="h-[48px]"
+                    />
+                    <Textinput
+                        label="Referral Code (Optional)"
+                        type="text"
+                        placeholder="Referral Code (Optional)"
+                        v-model="form.referral"
                         classInput="h-[48px]"
                     />
                     <Textinput
@@ -89,9 +108,9 @@ const onSubmit = async () => {
                     classInput="h-[48px]"
                 />
 
-                    <button type="submit" :disabled="processing" class="block w-full text-center btn btn-dark">
+                    <Button :is-loading="processing" btn-class="btn-dark" type="submit" :is-disabled="processing" class="block w-full text-center btn btn-dark">
                         Sign Up
-                    </button>
+                    </Button>
                 </form>
                 <div
                     className=" relative border-b-[#9AA2AF] border-opacity-[16%] border-b pt-6"

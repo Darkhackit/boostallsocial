@@ -54,7 +54,8 @@
         >
           <SwitchDark />
             <div>
-                <router-link class="text-slate-900 dark:text-white font-medium hover:underline" :to="{name:'home'}">GHC 20</router-link>
+                <router-link class="text-slate-900 dark:text-white font-medium hover:underline" :to="{name:'home'}">
+                    {{ user.currency }} {{user.balance}}</router-link>
             </div>
           <Profile v-if="window.width > 768" />
           <handle-mobile-menu v-if="window.width < 768" />
@@ -94,6 +95,11 @@ export default {
     MobileLogo,
     HandleMobileMenu,
   },
+    computed: {
+        user() {
+            return JSON.parse(localStorage.getItem('boost_user'))
+        }
+    },
 
   methods: {
     navbarTypeClass() {
@@ -126,6 +132,9 @@ export default {
       }
     },
   },
+    mounted() {
+      console.log(localStorage)
+    }
 };
 </script>
 <style lang="scss" scoped>

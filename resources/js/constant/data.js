@@ -9,6 +9,21 @@ export const menuItems = [
     icon: "heroicons-outline:home",
     link: "/home",
   },
+    {
+        title: "Rent Number",
+        icon: "heroicons-outline:home",
+        link: "/rent-number",
+    },
+    {
+        title: "Add Funds",
+        icon: "heroicons-outline:home",
+        link: "/add-funds",
+    },
+    {
+        title: "Affiliate",
+        icon: "heroicons-outline:home",
+        link: "/affiliate",
+    },
 ];
 // menuseetins
 
@@ -41,7 +56,7 @@ export const ProfileMenu = [
     icon: "heroicons-outline:cog",
     link: "home",
   },
- 
+
   {
     label: "Logout",
     icon: "heroicons-outline:login",
