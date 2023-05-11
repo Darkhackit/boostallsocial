@@ -151,7 +151,7 @@ onBeforeMount(async () => {
                   </div>
               </div>
                 <div class="grid grid-cols-2 gap-4 mt-3">
-                    <Card v-for="payment in payments"  :className="payment.id == form.payment ? 'bg-blue-300 dark:bg-blue-300 cursor-pointer ' : ''" class="cursor-pointer" >
+                    <Card v-for="payment in payments"  :className="payment.id == form.payment ? 'bg-blue-200 dark:bg-blue-200 cursor-pointer ' : ''" class="cursor-pointer" >
                         <div @click="form.payment = payment.id">
                             <p class="flex justify-center text-center">
                                 <Icon v-show="payment.id == form.payment" :class="payment.id == form.payment ? 'dark:text-black-500' : 'dark:text-white'" class="font-bold text-black-500  text-3xl" icon="material-symbols:check"  />

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('referral_id')->nullable();
             $table->timestamp('code_expiry')->nullable();
             $table->string('api_key');
+            $table->timestamp('last_login')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

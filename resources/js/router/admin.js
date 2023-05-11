@@ -25,6 +25,16 @@ const admin = [
                 component: () => import("@/views/admin/target-country.vue"),
             },
             {
+                path: "/customers",
+                name: "customers",
+                component: () => import("@/views/admin/customers.vue"),
+            },
+            {
+                path: "/payments",
+                name: "payments",
+                component: () => import("@/views/admin/payments.vue"),
+            },
+            {
                 path: "/chat",
                 name: "chat",
                 component: () => import("@/views/index.vue"),

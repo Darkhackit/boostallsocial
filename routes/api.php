@@ -18,6 +18,7 @@ Route::group(['middleware' => 'auth:api'],function ($router) {
     Route::get('/single-service/{val}',[\App\Http\Controllers\SocialMediaController::class,'service_details']);
 
     Route::get('/referrals',[\App\Http\Controllers\AffiliateController::class,'referrals']);
+    Route::post('/payments',[\App\Http\Controllers\PaymentController::class,'create']);
 });
 
 Route::group(['middleware' => 'auth:admins'],function ($router) {
@@ -43,6 +44,11 @@ Route::group(['middleware' => 'auth:admins'],function ($router) {
     Route::get('/target-country/{country}',[\App\Http\Controllers\CountryController::class,'show']);
     Route::put('/target-country/{country}',[\App\Http\Controllers\CountryController::class,'update']);
     Route::delete('/target-country/{country}',[\App\Http\Controllers\CountryController::class,'delete']);
+
+    Route::get('/customers',[\App\Http\Controllers\CustomerController::class,'getCustomers']);
+    Route::post('/customers',[\App\Http\Controllers\CustomerController::class,'createCustomer']);
+    Route::get('/customers/{user}',[\App\Http\Controllers\CustomerController::class,'showCustomer']);
+    Route::put('/customers/{user}',[\App\Http\Controllers\CustomerController::class,'updateCustomer']);
 });
 
 

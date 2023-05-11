@@ -7,22 +7,22 @@ export const menuItems = [
   {
     title: "Social Media Services",
     icon: "heroicons-outline:home",
-    link: "/home",
+    link: "home",
   },
     {
         title: "Rent Number",
         icon: "heroicons-outline:home",
-        link: "/rent-number",
+        link: "rent-number",
     },
     {
         title: "Add Funds",
-        icon: "heroicons-outline:home",
-        link: "/add-funds",
+        icon: "heroicons-outline:money",
+        link: "add-funds",
     },
     {
         title: "Affiliate",
         icon: "heroicons-outline:home",
-        link: "/affiliate",
+        link: "affiliate",
     },
 ];
 // menuseetins
@@ -47,6 +47,16 @@ export const adminItems = [
         title: "Target Country",
         icon: "heroicons-outline:home",
         link: "target-country",
+    },
+    {
+        title: "Customers",
+        icon: "heroicons-outline:users",
+        link: "customers",
+    },
+    {
+        title: "Payments",
+        icon: "heroicons-outline:users",
+        link: "payments",
     },
 ];
 
