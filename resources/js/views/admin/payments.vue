@@ -26,7 +26,7 @@ const error = ref([])
 const providers = ref([])
 const services = ref([])
 const countries = ref([])
-const medias = ref([])
+const payments = ref([])
 const  books = ref([
     {
         title: "Database",
@@ -50,8 +50,9 @@ const types = ref([
 const form = ref({
     email:'',
     amount:'',
-    method:'',
+    paymentMethod:'',
     bonus:true,
+    ip:''
 })
 const ed_form = ref({
     id:'',
@@ -80,8 +81,8 @@ const columns = ref([
         field: "id",
     },
     {
-        label: "Name",
-        field: "name",
+        label: "Method",
+        field: "method",
     },
     {
         label: "Email",
@@ -121,7 +122,7 @@ const viewData = async (id) => {
 const addData = async () => {
     processing.value = true
     try {
-        let response = await axiosClient.post('/api/customers',form.value)
+        let response = await axiosClient.post('/api/add-payment',form.value)
         console.log(response)
         form.value.name = ""
         form.value.password = ""
@@ -152,6 +153,19 @@ const updateServiceProvider = async () => {
     }
 }
 
+const getPayment = async () => {
+    loadingService.value = true
+    try {
+        let response = await axiosClient.get('/api/get-payment')
+        payments.value = response.data
+        console.log(response)
+        loadingService.value = false
+    }catch (e) {
+        console.log(e.response)
+        loadingService.value = false
+    }
+}
+
 const getData = async () => {
     loadingService.value = true
     try {
@@ -165,6 +179,7 @@ const getData = async () => {
     }
 }
 onMounted(async () => {
+    await getPayment()
     await getData()
 })
 </script>
@@ -189,7 +204,7 @@ onMounted(async () => {
                 :columns="columns"
                 :is-loading="loadingService"
                 styleClass=" vgt-table bordered"
-                :rows="countries"
+                :rows="payments"
                 :pagination-options="{
                   enabled: true,
                   perPage: perpage,
@@ -246,9 +261,18 @@ onMounted(async () => {
                     placeholder="Amount"
                 />
                 <VueSelect  label="Payment Method" class="">
-                    <vSelect v-model="form.method" :options="['momo','crypto','binance','pm']" label="Payment Method"  placeholder="Payment Method" />
+                    <vSelect v-model="form.paymentMethod" :options="['momo','crypto','binance','pm']" label="Payment Method"  placeholder="Payment Method" />
                 </VueSelect>
                 <Checkbox label="Include Bonus" :checked="form.bonus"  v-model="form.bonus" />
+                <Textinput
+                    label="Ip"
+                    v-model="form.ip"
+                    @input="clearErrors('ip')"
+                    type="text"
+                    :class-input="{'border-red-500':errors.ip}"
+                    :error="errors.ip ? `${errors.ip[0]}` : ''"
+                    placeholder="Ip"
+                />
             </div>
             <div class="float-right mb-3">
                 <Button :isLoading="processing" @click.prevent="addData" btn-class="btn-dark">Add Payment</Button>

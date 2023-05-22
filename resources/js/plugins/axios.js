@@ -7,13 +7,26 @@ const axiosClient = axios.create({
 
 })
 
+const getCurrentUser = async () => {
+   try {
+       let response = await axios.get(`/api/me`,{
+           headers:{
+               Authorization:'Bearer ' + JSON.parse(window.localStorage.getItem('boost_token'))
+           }
+       })
+       window.localStorage.setItem('boost_user',JSON.stringify(response.data.user))
+       console.log(response)
+   }catch (e) {
+       console.log(e.response)
+   }
+}
 const responseHandler = async (response) => {
     return  response
 }
 const requestHandler = async (request) => {
+    await getCurrentUser()
     let token = JSON.parse(window.localStorage.getItem('boost_token'))
     request.headers.Authorization = 'Bearer ' + token;
-
     return request
 }
 const errorHandler = async (error) => {

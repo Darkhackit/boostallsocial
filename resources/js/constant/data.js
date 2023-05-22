@@ -7,22 +7,37 @@ export const menuItems = [
   {
     title: "Social Media Services",
     icon: "heroicons-outline:home",
-    link: "home",
+    link: "/home",
   },
     {
         title: "Rent Number",
-        icon: "heroicons-outline:home",
-        link: "rent-number",
+        icon: "heroicons-outline:identification",
+        link: "/rent-number",
     },
     {
         title: "Add Funds",
-        icon: "heroicons-outline:money",
-        link: "add-funds",
+        icon: "material-symbols:payments-outline",
+        link: "/add-funds",
+    },
+    {
+        title: "Orders",
+        icon: "fluent-mdl2:reservation-orders",
+        link: "#",
+        child: [
+            {
+                childtitle: "Social Media Service Orders",
+                childlink: "/orders",
+            },
+            {
+                childtitle: "Rent Numbers Orders",
+                childlink: "project-details",
+            },
+        ]
     },
     {
         title: "Affiliate",
-        icon: "heroicons-outline:home",
-        link: "affiliate",
+        icon: "ic:outline-network-ping",
+        link: "/affiliate",
     },
 ];
 // menuseetins

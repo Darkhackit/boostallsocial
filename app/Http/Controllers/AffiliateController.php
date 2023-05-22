@@ -16,7 +16,7 @@ class AffiliateController extends Controller
             return [
                 'email' => $referrer->user->email,
                 'joined'=> $referrer->user->created_at->format('Y-m-d'),
-                'earning' => $referrer->user->account->main === 0 ? 0 : $referrer->user->account->main * 0.05,
+                'earning' => $referrer->user->account->balance === 0 ? 0 : number_format($referrer->user->account->balance * 0.05,2),
                 'currency' => $referrer->user->account->currency,
             ];
         }),Response::HTTP_OK);

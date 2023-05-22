@@ -27,6 +27,7 @@ class LoginController extends Controller
             if(Hash::check($request->password,$user->password)) {
 
                 if($user->email_verified_at) {
+                    $user->last_login = now();
                     $token = auth()->login($user);
                     return response()->json([
                         'access_token' => $token,
@@ -35,7 +36,8 @@ class LoginController extends Controller
                         'user' => [
                             'name' => auth()->user()->name,
                             'email' => auth()->user()->email,
-                            'balance' => auth()->user()->account->balance,
+                            'balance' => number_format(auth()->user()->account->balance,2),
+                            'referral_balance' => number_format(auth()->user()->account->referral_balance,2),
                             'currency' => auth()->user()->account->currency,
                         ]
                     ],Response::HTTP_OK);

@@ -44,7 +44,6 @@ const getService = debounce(async (e) => {
                   :value="33.3"
                   height="h-3"
                   title="1/3 step"
-
               />
           </div>
           <div class="mt-5">

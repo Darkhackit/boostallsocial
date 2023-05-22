@@ -54,7 +54,7 @@
         >
           <SwitchDark />
             <div>
-                <router-link class="text-slate-900 dark:text-white font-medium hover:underline" :to="{name:'home'}">
+                <router-link class="text-slate-900 dark:text-white font-medium hover:underline" :to="{name:'add-funds'}">
                     {{ user.currency }} {{user.balance}}</router-link>
             </div>
           <Profile v-if="window.width > 768" />

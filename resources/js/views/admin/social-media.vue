@@ -2,10 +2,10 @@
 import Card from "@/components/Card";
 import Icon from "@/components/Icon";
 import Textinput from "@/components/Textinput/index.vue";
-import Select from "@/components/Select/index.vue";
+import VueSelect from "@/components/Select/VueSelect.vue";
 import InputGroup from "@/components/InputGroup";
 import service from "@/components/service.vue";
-
+import vSelect from "vue-select";
 import Button from "@/components/Button/index.vue";
 import Modal from '@/components/Modal/Modal';
 const processing = ref(false)
@@ -33,6 +33,7 @@ const types = ref([
 const socialMedia = ref({
     name:'',
     image:'',
+    type:'',
     input_format:'',
     show_link:false,
     popular_service:false,
@@ -48,6 +49,7 @@ const ed_social = ref({
     id:'',
     name:'',
     image:'',
+    type:'',
     input_format:'',
     show_link:false,
     popular_service:false,
@@ -120,6 +122,7 @@ const viewProvider = async (id) => {
         ed_social.value.name = response.data.name
         ed_social.value.id = response.data.id
         ed_social.value.image = response.data.image
+        ed_social.value.type = response.data.type
         ed_social.value.input_format = response.data.format
         ed_social.value.show_usernames = response.data.show_usernames
         ed_social.value.show_username = response.data.show_username
@@ -276,7 +279,13 @@ onMounted(async () => {
                     :error="errors.input_format ? `${errors.input_format[0]}` : ''"
                     placeholder="FORMAT"
                 />
+                <div>
+                    <VueSelect  label="Type" class="">
+                        <vSelect v-model="socialMedia.type" :options="['mention_username','poll','custom_comment','default','subscription','mentions','package','mention_usernames','mention_comments','comment_likes','comment_replies','mentions_with_hashtags','mentions_hashtag','mentions_media_likers']"  placeholder="Search Service" />
+                    </VueSelect>
+                </div>
             </div>
+
                 <div class="flex space-x-rb flex-wrap mt-5">
                     <Checkbox label="Show Answer Number" :checked="socialMedia.show_answer_number" v-model="socialMedia.show_answer_number" />
                     <Checkbox label="Popular Service" :checked="socialMedia.popular_service" v-model="socialMedia.popular_service" />
@@ -344,6 +353,11 @@ onMounted(async () => {
                     :error="error.input_format ? `${error.input_format[0]}` : ''"
                     placeholder="FORMAT"
                 />
+                <div>
+                    <VueSelect  label="Type" class="">
+                        <vSelect v-model="ed_social.type" :options="['mention_username','poll','custom_comment','default','subscription','mentions','package','mention_usernames','mention_comments','comment_likes','comment_replies','mentions_with_hashtags','mentions_hashtag','mentions_media_likers']"  placeholder="Search Service" />
+                    </VueSelect>
+                </div>
             </div>
             <div class="flex space-x-rb flex-wrap mt-5">
                 <Checkbox label="Show Answer Number" :checked="ed_social.show_answer_number" v-model="ed_social.show_answer_number" />

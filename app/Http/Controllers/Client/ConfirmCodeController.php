@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ConfirmCodeController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): JsonResponse
     {
         $this->validate($request,[
             'email' => ['required','exists:users,email'],
@@ -29,7 +30,7 @@ class ConfirmCodeController extends Controller
         }
         $user->code = "";
         $user->email_verified_at = Carbon::now();
-
+        $user->last_login = now();
         $user->update();
 
         $token = auth()->login($user);
@@ -41,7 +42,8 @@ class ConfirmCodeController extends Controller
             'user' => [
                 'name' => auth()->user()->name,
                 'email' => auth()->user()->email,
-                'balance' => auth()->user()->account->balance,
+                'balance' => number_format(auth()->user()->account->balance,2),
+                'referral_balance' => number_format(auth()->user()->account->referral_balance,2),
                 'currency' => auth()->user()->account->currency
             ]
         ],Response::HTTP_OK);

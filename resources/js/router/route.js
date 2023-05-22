@@ -30,6 +30,11 @@ const route = [
             component: () => import("@/views/affilite/index.vue"),
         },
         {
+            path: "/orders",
+            name: "orders",
+            component: () => import("@/views/orders/orders.vue"),
+        },
+        {
             path: "/chat",
             name: "chat",
             component: () => import("@/views/index.vue"),

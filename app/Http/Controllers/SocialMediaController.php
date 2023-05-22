@@ -91,6 +91,7 @@ class SocialMediaController extends Controller
     {
         $socialMedia->name = $request->name;
         $socialMedia->image = $request->image;
+        $socialMedia->type = $request->type;
         $socialMedia->format = $request->input_format;
         $socialMedia->show_link = $request->show_link;
         $socialMedia->popular_service = $request->popular_service;
@@ -138,6 +139,7 @@ class SocialMediaController extends Controller
             return response()->json([
                 'name' => $service->name,
                 'format' => $service->format,
+                'type' => $service->type,
                 'show_link' => $service->show_link,
                 'show_comments' => $service->show_comments,
                 'show_quantity' => $service->show_quantity,
@@ -148,6 +150,7 @@ class SocialMediaController extends Controller
                 'show_groups' => $service->show_groups,
                 'countries' => $service->countries->map(function ($country) use ($location) {
                     return [
+                        'id' => $country->id,
                         'name' => $country->name,
                         'price' => number_format($country->price * $location['geoplugin_currencyConverter'],2),
                         'min' => $country->min,

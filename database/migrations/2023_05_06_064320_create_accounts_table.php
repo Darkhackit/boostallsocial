@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('accounts', function (Blueprint $table) {
+
             $table->id();
             $table->foreignId('user_id');
             $table->float('balance')->default(0);
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
         });
     }
 

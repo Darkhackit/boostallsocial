@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('image')->nullable();
             $table->string('format')->nullable();
+            $table->string('type');
             $table->boolean('show_link')->default(false);
             $table->boolean('popular_service')->default(false);
             $table->boolean('show_comments')->default(false);

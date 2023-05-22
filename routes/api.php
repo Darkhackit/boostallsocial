@@ -14,11 +14,14 @@ Route::group(['middleware' => 'api' , 'prefix' => 'auth'] , function ($route) {
 });
 
 Route::group(['middleware' => 'auth:api'],function ($router) {
+    Route::get('me',\App\Http\Controllers\MeController::class);
     Route::get('/get-service',[\App\Http\Controllers\SocialMediaController::class,'getService']);
     Route::get('/single-service/{val}',[\App\Http\Controllers\SocialMediaController::class,'service_details']);
 
     Route::get('/referrals',[\App\Http\Controllers\AffiliateController::class,'referrals']);
     Route::post('/payments',[\App\Http\Controllers\PaymentController::class,'create']);
+
+    Route::post('/order/social_media',[\App\Http\Controllers\SocialMediaOrder::class,'create']);
 });
 
 Route::group(['middleware' => 'auth:admins'],function ($router) {
@@ -49,6 +52,10 @@ Route::group(['middleware' => 'auth:admins'],function ($router) {
     Route::post('/customers',[\App\Http\Controllers\CustomerController::class,'createCustomer']);
     Route::get('/customers/{user}',[\App\Http\Controllers\CustomerController::class,'showCustomer']);
     Route::put('/customers/{user}',[\App\Http\Controllers\CustomerController::class,'updateCustomer']);
+
+
+    Route::post('/add-payment',[\App\Http\Controllers\PaymentController::class,'adminCreate']);
+    Route::get('/get-payment',[\App\Http\Controllers\PaymentController::class,'index']);
 });
 
 
