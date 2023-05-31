@@ -17,6 +17,35 @@ class SocialMediaOrder extends Controller
     /**
      * @throws ValidationException
      */
+    public function index()
+    {
+        $user_orders = \App\Models\SocialMediaOrder::query()->where('user_id',auth()->id())->get();
+        foreach ($user_orders as $order) {
+            if($order->status != 'complete') {
+                $data = [
+                    'key' => $order->country->provider?->api_key,
+                    'action' => "status",
+                    "order" => $order->order_key
+                ];
+               $response = Http::get($order->country->provider?->url,$data)->json();
+               if(array_key_exists('start_count',$response)) {
+                   $order->start_count = (int)$response['start_count'];
+               }
+                if(array_key_exists('status',$response)) {
+//                    $order->status = $response['status'];
+                }
+                $order->update();
+            }
+        }
+        return \response()->json($user_orders->map(fn($o) => [
+            'order' => $o->order_key,
+            'service_name' => $o->country->social_media->name,
+            'link' => $o->link,
+            'quantity' => $o->quantity,
+            'start_count' => $o->start_count,
+            'status' => $o->status
+        ]),Response::HTTP_OK);
+    }
     public function create(Request $request)
     {
         $this->validate($request,[
@@ -253,7 +282,7 @@ class SocialMediaOrder extends Controller
 
                     $social_order = new \App\Models\SocialMediaOrder();
                     $social_order->country_id = $target_country->id;
-                    $social_order->order_key = mt_rand(10000,99999);
+                    $social_order->order_key = $response['order'];
                     $social_order->quantity = $request->quantity;
                     $social_order->status = 'pending';
                     $social_order->link = $request->link;

@@ -22,6 +22,7 @@ Route::group(['middleware' => 'auth:api'],function ($router) {
     Route::post('/payments',[\App\Http\Controllers\PaymentController::class,'create']);
 
     Route::post('/order/social_media',[\App\Http\Controllers\SocialMediaOrder::class,'create']);
+    Route::get('/social/orders',[\App\Http\Controllers\SocialMediaOrder::class,'index']);
 });
 
 Route::group(['middleware' => 'auth:admins'],function ($router) {

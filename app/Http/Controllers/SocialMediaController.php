@@ -115,11 +115,14 @@ class SocialMediaController extends Controller
     }
     public function getService(): JsonResponse
     {
-        $s = \request('q');
+        $s =  \request('q');
         return response()->json([
             'data' => SocialMedia::query()
                 ->when(\request('q'),function ($query,$search) {
-                    $query->where('name','like',"%{$search}%");
+                    $m = strtoupper($search);
+                    $b = strtolower($search);
+                    $query->where('name','like',"%{$m}%");
+                    $query->orWhere('name','like',"%{$b}%");
                 })
                 ->get()
                 ->map(function ($social) {

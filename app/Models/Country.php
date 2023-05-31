@@ -18,5 +18,9 @@ class Country extends Model
     {
         return $this->belongsTo(SocialMedia::class);
     }
+    public function social_media_orders(): HasMany
+    {
+        return $this->hasMany(SocialMediaOrder::class);
+    }
 
 }

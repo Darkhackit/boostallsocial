@@ -1,31 +1,62 @@
 <script setup>
 import Card from "@/components/Card";
-import {ref} from 'vue'
+import {onMounted, ref, watch} from 'vue'
+import axiosClient from "@/plugins/axios";
 const orders = ref([])
+const timer = ref("")
 const loading = ref(false)
 
 
 const columns = ref([
 
     {
-        label: "Email",
-        field: "email",
+        label: "Order",
+        field: "order",
     },
     {
-        label: "Registration Date",
-        field: "joined",
+        label: "Service Name",
+        field: "service_name",
+    },
+    {
+        label: "Link",
+        field: "link",
     },
 
     {
-        label: "Last Payment Date",
+        label: "Quantity",
         field: "quantity",
     },
 
     {
-        label: "Earning",
-        field: "earning",
+        label: "Start Count",
+        field: "start_count",
+    },
+    {
+        label: "Status",
+        field: "status",
     },
 ])
+
+const getOrders = async () => {
+    try {
+        let response = await axiosClient.get('/api/social/orders')
+        orders.value = response.data
+        console.log(response)
+    }catch (e) {
+        console.log(e.response)
+    }
+}
+watch(() => orders.value,async () => {
+  let uncompleted =  orders.value.find(order => order.status !== 'completed')
+    if (uncompleted) {
+        timer.value = setInterval(await getOrders,100000)
+    }else {
+      timer.value =   clearInterval(timer.value)
+    }
+})
+onMounted(async () => {
+    await getOrders();
+})
 </script>
 <template>
     <div class="grid sm:grid-cols-6  mt-3">

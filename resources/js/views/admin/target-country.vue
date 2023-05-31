@@ -283,7 +283,7 @@ onMounted(async () => {
 
                     </span>
                     <span class="flex" v-if="props.column.field == 'price'">
-                        <p>GHC {{props.row.price}}</p>
+                        <p>$ {{props.row.price}}</p>
                     </span>
                 </template>
             </vue-good-table>
